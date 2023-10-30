@@ -28,6 +28,14 @@ app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
 
+app.get('/info', (req,res)=>{
+  const today = new Date()
+  const pe = persons.length > 1 ? "people" : "person"
+  const txt = `<p>Phonebook has info for ${persons.length} ${pe} </p>
+  <p>${today}</p>`
+  res.send(txt)
+})
+
 app.listen(3001, () => {
     console.log('Server running')
 })
