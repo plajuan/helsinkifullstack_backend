@@ -1,11 +1,10 @@
 const express = require('express')
 const app = express()
 const morgan = require('morgan')
-app.use(morgan('tiny'))
+morgan.token('body', function (req, res) { return JSON.stringify(req.body) })
+
 app.use(express.json())
-
-morgan(':method :url :status :res[content-length] - :response-time ms')
-
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 let persons = [
     { 
@@ -81,19 +80,7 @@ app.post('/api/persons', (req,res)=>{
   persons.push(person)  
   res.json(person)
 })
-/* https://github.com/expressjs/morgan
-3.7: Phonebook backend step7
-Add the morgan middleware to your application for logging. 
-Configure it to log messages to your console based on the tiny configuration.
 
-The documentation for Morgan is not the best, 
-and you may have to spend some time figuring out how to configure it correctly. 
-However, most documentation in the world falls under the same category, 
-so it's good to learn to decipher and interpret cryptic documentation in any case.
-
-Morgan is installed just like all other libraries with the npm install command. 
-Taking morgan into use happens the same way as configuring any other middleware by using the app.use command.
-*/
 app.listen(3001, () => {
     console.log('Server running on port 3001')
 })
