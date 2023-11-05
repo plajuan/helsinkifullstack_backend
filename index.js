@@ -26,6 +26,10 @@ let persons = [
     }
 ]
 
+function generateId(){
+  return Math.floor(Math.random() * (Math.pow(2,31)-1))
+}
+
 app.get('/api/persons', (req, res) => {
     res.json(persons)
 })
@@ -57,8 +61,19 @@ app.delete('/api/persons/:id', (req,res)=>{
 })
 
 app.post('/api/persons', (req,res)=>{  
-  const person = req.body  
-  person.id = Math.floor(Math.random() * (Math.pow(2,31)-1))  
+  const person = req.body
+  if (!person.name){
+    return res.status(400).json({error: "name is missing"})
+  }
+  if (!person.number){
+    return res.status(400).json({error: "number is missing"})
+  }
+  const nameExists = persons.find(it => it.name === person.name)
+  if(nameExists){
+    return res.status(400).json({error: "name already exists in the phonebook"})
+  }
+  
+  person.id = generateId()
   persons.push(person)  
   res.json(person)
 })
